@@ -105,11 +105,44 @@
                     </button>
                     
                     <!-- Profile Dropdown -->
-                    <div class="profile-badge">
-                        <div class="avatar">AD</div>
-                        <div class="profile-info">
-                            <span class="profile-name">ຜູ້ດູແລລະບົບ</span>
-                            <span class="profile-role">ຜູ້ບໍລິຫານສູງສຸດ</span>
+                    <div class="profile-badge-wrapper">
+                        <div class="profile-badge" id="profile-dropdown-btn">
+                            <div class="avatar" id="header-user-avatar">AD</div>
+                            <div class="profile-info">
+                                <span class="profile-name" id="header-user-name">ຜູ້ດູແລລະບົບ</span>
+                                <span class="profile-role" id="header-user-role">ຜູ້ບໍລິຫານສູງສຸດ</span>
+                            </div>
+                            <svg class="dropdown-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:12px; height:12px; margin-left:4px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                        <div class="profile-dropdown" id="profile-dropdown-menu">
+                            <div class="dropdown-item" onclick="switchUserRole('super_admin')">
+                                <span class="role-avatar SA">SA</span>
+                                <div class="role-desc">
+                                    <span class="role-title">Super Admin</span>
+                                    <span class="role-sub">ຜູ້ບໍລິຫານສູງສຸດ</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="switchUserRole('admin')">
+                                <span class="role-avatar AD">AD</span>
+                                <div class="role-desc">
+                                    <span class="role-title">Admin</span>
+                                    <span class="role-sub">ຜູ້ດູແລລະບົບ</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="switchUserRole('maker')">
+                                <span class="role-avatar MK">MK</span>
+                                <div class="role-desc">
+                                    <span class="role-title">Maker</span>
+                                    <span class="role-sub">ຜູ້ສ້າງເນື້ອຫາ</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-item" onclick="switchUserRole('checker')">
+                                <span class="role-avatar CK">CK</span>
+                                <div class="role-desc">
+                                    <span class="role-title">Checker</span>
+                                    <span class="role-sub">ຜູ້ກວດສອບ</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
