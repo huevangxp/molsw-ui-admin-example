@@ -675,6 +675,15 @@ header {
     border-bottom: none;
 }
 
+.data-table tbody tr.active-row {
+    background-color: rgba(79, 70, 229, 0.08);
+    border-left: 3px solid var(--primary);
+}
+
+[data-theme="light"] .data-table tbody tr.active-row {
+    background-color: rgba(79, 70, 229, 0.05);
+}
+
 /* Badges */
 .badge {
     display: inline-flex;
