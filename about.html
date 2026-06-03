@@ -21,7 +21,8 @@
             </div>
             
             <ul class="sidebar-menu">
-                <li class="sidebar-menu-item active"><a href="index.html">
+                <li class="sidebar-menu-item">
+                    <a href="index.html">
                         <!-- Home Icon -->
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"/></svg>
                         <span>ແຜງຄວບຄຸມ</span>
@@ -34,8 +35,7 @@
                         <span>ຈັດການຂ່າວສານ</span>
                     </a>
                 </li>
-                <li class="sidebar-menu-item">
-                    <a href="about.html">
+                <li class="sidebar-menu-item active"><a href="about.html">
                         <!-- About Icon -->
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <span>ຂໍ້ມູນກ່ຽວກັບ</span>
@@ -88,7 +88,7 @@
                         <!-- Menu Burger Icon -->
                         <svg style="width:24px; height:24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     </button>
-                    <h1 class="page-title" id="view-title">ແຜງຄວບຄຸມ</h1>
+                    <h1 class="page-title" id="view-title">ຂໍ້ມູນກ່ຽວກັບ</h1>
                 </div>
                 
                 <div class="header-right">
@@ -126,7 +126,31 @@
     <div id="toast-container" class="toast-container"></div>
 
         <!-- PAGE-SPECIFIC MODALS -->
-
+    <!-- Modal 2: About Us Core Value -->
+    <div class="modal-overlay" id="modal-value-form">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="value-modal-title">ເພີ່ມຄຸນຄ່າຫຼັກ</h3>
+                <button class="modal-close" onclick="ModalManager.close('modal-value-form')">&times;</button>
+            </div>
+            <form id="value-form" onsubmit="submitValueForm(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">ຫົວຂໍ້ຄຸນຄ່າ *</label>
+                        <input type="text" class="form-control" id="value-form-title" placeholder="ຕົວຢ່າງ: ຄວາມໂປ່ງໃສ" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">ຄຳອະທິບາຍຄຸນຄ່າ *</label>
+                        <textarea class="form-control" id="value-form-desc" placeholder="ອະທິບາຍຄຸນຄ່ານີ້ຢ່າງລະອຽດ..." style="min-height:90px;" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="ModalManager.close('modal-value-form')">ຍົກເລີກ</button>
+                    <button type="submit" class="btn btn-primary">ບັນທຶກຄຸນຄ່າ</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Core App Controller Script -->
     <script src="app.js"></script>

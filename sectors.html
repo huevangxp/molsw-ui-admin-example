@@ -21,7 +21,8 @@
             </div>
             
             <ul class="sidebar-menu">
-                <li class="sidebar-menu-item active"><a href="index.html">
+                <li class="sidebar-menu-item">
+                    <a href="index.html">
                         <!-- Home Icon -->
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"/></svg>
                         <span>ແຜງຄວບຄຸມ</span>
@@ -48,8 +49,7 @@
                         <span>ອົງກອນ / ໂຄງຮ່າງ</span>
                     </a>
                 </li>
-                <li class="sidebar-menu-item">
-                    <a href="sectors.html">
+                <li class="sidebar-menu-item active"><a href="sectors.html">
                         <!-- Sector Icon -->
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                         <span>ຂະແໜງການ</span>
@@ -88,7 +88,7 @@
                         <!-- Menu Burger Icon -->
                         <svg style="width:24px; height:24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     </button>
-                    <h1 class="page-title" id="view-title">ແຜງຄວບຄຸມ</h1>
+                    <h1 class="page-title" id="view-title">ຂະແໜງການ</h1>
                 </div>
                 
                 <div class="header-right">
@@ -126,7 +126,55 @@
     <div id="toast-container" class="toast-container"></div>
 
         <!-- PAGE-SPECIFIC MODALS -->
+    <!-- Modal 4: Sectors Form -->
+    <div class="modal-overlay" id="modal-sector-form">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="sector-modal-title">ເພີ່ມຂະແໜງການ</h3>
+                <button class="modal-close" onclick="ModalManager.close('modal-sector-form')">&times;</button>
+            </div>
+            <form id="sector-form" onsubmit="submitSectorForm(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">ຊື່ຂະແໜງການ *</label>
+                        <input type="text" class="form-control" id="sector-form-name" placeholder="ຕົວຢ່າງ: ປ່າໄມ້ແບບຍືນຍົງ" required>
+                    </div>
 
+                    <div class="form-group row-3" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:16px;">
+                        <div>
+                            <label class="form-label">ເລືອກໄອຄອນ</label>
+                            <select class="form-control form-select" id="sector-form-icon">
+                                <option value="leaf">ໃບໄມ້ (ກະສິກຳ / ນິເວດ)</option>
+                                <option value="book">ປຶ້ມ (ການສຶກສາ / ຝຶກອົບຮົມ)</option>
+                                <option value="zap">ຟ້າແມບ (ພະລັງງານ / ແສງອາທິດ)</option>
+                                <option value="heart">ຫົວໃຈ (ສາທາລະນະສຸກ)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">ສີປະຈຳຂະແໜງການ</label>
+                            <input type="color" class="form-control" id="sector-form-color" value="#4F46E5" style="padding: 4px; height: 42px; cursor: pointer;">
+                        </div>
+                        <div>
+                            <label class="form-label">ສະຖານະ</label>
+                            <select class="form-control form-select" id="sector-form-status">
+                                <option value="active">ເປີດໃຊ້ງານ</option>
+                                <option value="inactive">ປິດໃຊ້ງານ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">ຄຳອະທິບາຍການດຳເນີນງານ *</label>
+                        <textarea class="form-control" id="sector-form-desc" placeholder="ລາຍລະອຽດການລິເລີ່ມ ແລະ ການດຳເນີນງານ..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="ModalManager.close('modal-sector-form')">ຍົກເລີກ</button>
+                    <button type="submit" class="btn btn-primary">ບັນທຶກຂະແໜງການ</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Core App Controller Script -->
     <script src="app.js"></script>

@@ -21,7 +21,8 @@
             </div>
             
             <ul class="sidebar-menu">
-                <li class="sidebar-menu-item active"><a href="index.html">
+                <li class="sidebar-menu-item">
+                    <a href="index.html">
                         <!-- Home Icon -->
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"/></svg>
                         <span>ແຜງຄວບຄຸມ</span>
@@ -41,8 +42,7 @@
                         <span>ຂໍ້ມູນກ່ຽວກັບ</span>
                     </a>
                 </li>
-                <li class="sidebar-menu-item">
-                    <a href="org.html">
+                <li class="sidebar-menu-item active"><a href="org.html">
                         <!-- Organization Icon -->
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                         <span>ອົງກອນ / ໂຄງຮ່າງ</span>
@@ -88,7 +88,7 @@
                         <!-- Menu Burger Icon -->
                         <svg style="width:24px; height:24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     </button>
-                    <h1 class="page-title" id="view-title">ແຜງຄວບຄຸມ</h1>
+                    <h1 class="page-title" id="view-title">ອົງກອນ / ໂຄງຮ່າງ</h1>
                 </div>
                 
                 <div class="header-right">
@@ -126,7 +126,49 @@
     <div id="toast-container" class="toast-container"></div>
 
         <!-- PAGE-SPECIFIC MODALS -->
+    <!-- Modal 3: Board / Org Members -->
+    <div class="modal-overlay" id="modal-member-form">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="member-modal-title">ເພີ່ມຄະນະບໍລິຫານ/ສະມາຊິກທີມ</h3>
+                <button class="modal-close" onclick="ModalManager.close('modal-member-form')">&times;</button>
+            </div>
+            <form id="member-form" onsubmit="submitMemberForm(event)">
+                <div class="modal-body">
+                    <div class="form-group row-2">
+                        <div>
+                            <label class="form-label">ຊື່ ແລະ ນາມສະກຸນ *</label>
+                            <input type="text" class="form-control" id="member-form-name" placeholder="ດຣ. ສົມພອນ ດີເລີດ" required>
+                        </div>
+                        <div>
+                            <label class="form-label">ບົດບາດ / ຕຳແໜ່ງ *</label>
+                            <input type="text" class="form-control" id="member-form-role" placeholder="ຜູ້ອຳນວຍການບໍລິຫານ" required>
+                        </div>
+                    </div>
 
+                    <div class="form-group row-2">
+                        <div>
+                            <label class="form-label">ຕົວອັກສອນຫຍໍ້ (ສູງສຸດ 2 ຕົວ)</label>
+                            <input type="text" class="form-control" id="member-form-avatar" placeholder="ສພ" maxlength="2">
+                        </div>
+                        <div>
+                            <label class="form-label">ລຳດັບການສະແດງ</label>
+                            <input type="number" class="form-control" id="member-form-order" value="1">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">ປະຫວັດຫຍໍ້</label>
+                        <textarea class="form-control" id="member-form-bio" placeholder="ລະບຸປະຫວັດການເຮັດວຽກຫຍໍ້..." style="min-height:90px;"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="ModalManager.close('modal-member-form')">ຍົກເລີກ</button>
+                    <button type="submit" class="btn btn-primary">ບັນທຶກສະມາຊິກ</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Core App Controller Script -->
     <script src="app.js"></script>

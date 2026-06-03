@@ -21,7 +21,8 @@
             </div>
             
             <ul class="sidebar-menu">
-                <li class="sidebar-menu-item active"><a href="index.html">
+                <li class="sidebar-menu-item">
+                    <a href="index.html">
                         <!-- Home Icon -->
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"/></svg>
                         <span>ແຜງຄວບຄຸມ</span>
@@ -55,8 +56,7 @@
                         <span>ຂະແໜງການ</span>
                     </a>
                 </li>
-                <li class="sidebar-menu-item">
-                    <a href="activities.html">
+                <li class="sidebar-menu-item active"><a href="activities.html">
                         <!-- Activities Icon -->
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         <span>ກິດຈະກຳ</span>
@@ -88,7 +88,7 @@
                         <!-- Menu Burger Icon -->
                         <svg style="width:24px; height:24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     </button>
-                    <h1 class="page-title" id="view-title">ແຜງຄວບຄຸມ</h1>
+                    <h1 class="page-title" id="view-title">ກິດຈະກຳ</h1>
                 </div>
                 
                 <div class="header-right">
@@ -126,7 +126,63 @@
     <div id="toast-container" class="toast-container"></div>
 
         <!-- PAGE-SPECIFIC MODALS -->
+    <!-- Modal 5: Activities Form -->
+    <div class="modal-overlay" id="modal-activity-form">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="activity-modal-title">ລົງທະບຽນກິດຈະກຳ / ງານ</h3>
+                <button class="modal-close" onclick="ModalManager.close('modal-activity-form')">&times;</button>
+            </div>
+            <form id="activity-form" onsubmit="submitActivityForm(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">ຊື່ກິດຈະກຳ *</label>
+                        <input type="text" class="form-control" id="activity-form-title" placeholder="ຕົວຢ່າງ: ການເປີດນຳໃຊ້ລະບົບໄຟຟ້າແສງອາທິດໃນຊຸມຊົນ" required>
+                    </div>
 
+                    <div class="form-group row-2">
+                        <div>
+                            <label class="form-label">ວັັນທີຈັດກິດຈະກຳ</label>
+                            <input type="date" class="form-control" id="activity-form-date">
+                        </div>
+                        <div>
+                            <label class="form-label">ເວລາ</label>
+                            <input type="time" class="form-control" id="activity-form-time">
+                        </div>
+                    </div>
+
+                    <div class="form-group row-2">
+                        <div>
+                            <label class="form-label">ສະຖານທີ່ / ທີ່ຢູ່ *</label>
+                            <input type="text" class="form-control" id="activity-form-location" placeholder="ຕົວຢ່າງ: ຫໍປະຊຸມບ້ານ, ຫ້ອງໂຖງ C" required>
+                        </div>
+                        <div>
+                            <label class="form-label">ຊື່ຜູ້ປະສານງານ *</label>
+                            <input type="text" class="form-control" id="activity-form-organizer" placeholder="ຕົວຢ່າງ: ມາກັສ ເຊັນ" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ສະຖານະກິດຈະກຳ</label>
+                        <select class="form-control form-select" id="activity-form-status">
+                            <option value="active">ເປີດໃຊ້ງານ / ມີກຳນົດການ</option>
+                            <option value="pending">ລໍຖ້າອະນຸມັດ</option>
+                            <option value="archived">ເກັບຖາວອນ / ຜ່ານມາແລ້ວ</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">ຄຳອະທິບາຍຫຍໍ້</label>
+                        <textarea class="form-control" id="activity-form-desc" placeholder="ວາລະ ຫຼື ໂຄງຮ່າງແຜນງານ..." style="min-height:90px;"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="ModalManager.close('modal-activity-form')">ຍົກເລີກ</button>
+                    <button type="submit" class="btn btn-primary">ບັນທຶກກິດຈະກຳ</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Core App Controller Script -->
     <script src="app.js"></script>
