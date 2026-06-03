@@ -1393,3 +1393,123 @@ textarea.form-control {
         padding: 4px;
     }
 }
+
+
+/* ==========================================
+   ROLE SELECTOR DROPDOWN STYLES
+   ========================================== */
+
+.profile-badge-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-badge {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 14px 6px 6px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    transition: all var(--transition-fast);
+}
+
+.profile-badge:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--text-muted);
+}
+
+.dropdown-chevron {
+    transition: transform var(--transition-fast);
+    color: var(--text-secondary);
+}
+
+.profile-badge-wrapper.active .dropdown-chevron {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Menu styling - WOW Premium Glassmorphism */
+.profile-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 240px;
+    background: rgba(20, 27, 45, 0.95);
+    backdrop-filter: var(--backdrop-blur);
+    -webkit-backdrop-filter: var(--backdrop-blur);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+    display: none;
+    flex-direction: column;
+    padding: 8px;
+    z-index: 200;
+    animation: slideDown var(--transition-fast) forwards;
+}
+
+[data-theme="light"] .profile-dropdown {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.profile-dropdown.active {
+    display: flex;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="light"] .dropdown-item:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.role-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 11px;
+}
+
+.role-avatar.SA { background: linear-gradient(135deg, #EC4899 0%, #D946EF 100%); }
+.role-avatar.AD { background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%); }
+.role-avatar.MK { background: linear-gradient(135deg, #10B981 0%, #059669 100%); }
+.role-avatar.CK { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); }
+
+.role-desc {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.role-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.role-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
