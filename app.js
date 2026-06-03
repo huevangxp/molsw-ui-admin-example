@@ -825,6 +825,9 @@ window.submitNewsForm = function(event) {
 
 // --- 3. ABOUT US VIEW (CRUD values) ---
 router.register('#about', (container) => {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    const isReadOnly = role === 'checker';
+
     container.innerHTML = `
         <div class="grid-2x" style="margin-bottom: 24px;">
             <div class="card" style="display:flex; flex-direction:column; gap:16px;">
@@ -832,48 +835,53 @@ router.register('#about', (container) => {
                 <form id="about-info-form" onsubmit="submitAboutInfoForm(event)">
                     <div class="form-group">
                         <label class="form-label">ຫົວຂໍ້ຫຼັກ / ສ່ວນເທິງສຸດ</label>
-                        <input type="text" class="form-control" id="about-hero" value="${store.db.about.hero}" required>
+                        <input type="text" class="form-control" id="about-hero" value="${store.db.about.hero}" ${isReadOnly ? 'disabled style="opacity: 0.7; cursor: not-allowed;"' : ''} required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">ຄຳອະທິບາຍທົ່ວໄປ</label>
-                        <textarea class="form-control" id="about-desc" required>${store.db.about.description}</textarea>
+                        <textarea class="form-control" id="about-desc" ${isReadOnly ? 'disabled style="opacity: 0.7; cursor: not-allowed;"' : ''} required>${store.db.about.description}</textarea>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">ພາລະກິດຫຼັກ</label>
-                        <textarea class="form-control" id="about-mission" style="min-height:90px;" required>${store.db.about.mission}</textarea>
+                        <label class="form-label">ພາລະກິດ (Mission)</label>
+                        <textarea class="form-control" id="about-mission" ${isReadOnly ? 'disabled style="opacity: 0.7; cursor: not-allowed;"' : ''} required>${store.db.about.mission}</textarea>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">ວິໄສທັດຫຼັກ</label>
-                        <textarea class="form-control" id="about-vision" style="min-height:90px;" required>${store.db.about.vision}</textarea>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">ວິໄສທັດ (Vision)</label>
+                        <textarea class="form-control" id="about-vision" ${isReadOnly ? 'disabled style="opacity: 0.7; cursor: not-allowed;"' : ''} required>${store.db.about.vision}</textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width:100%">
-                        ບັນທຶກຂໍ້ມູນ ແລະ ການຕັ້ງຄ່າ
-                    </button>
+                    ${!isReadOnly ? `
+                        <button type="submit" class="btn btn-primary" style="margin-top: 16px; width: fit-content;">
+                            ບັນທຶກຂໍ້ມູນຫຼັກ
+                        </button>
+                    ` : ''}
                 </form>
             </div>
 
-            <div class="card" style="display:flex; flex-direction:column;">
-                <div class="section-header" style="margin-bottom: 16px;">
-                    <h3 style="font-size:16px;">ລາຍການຄຸນຄ່າຫຼັກ</h3>
-                    <button class="btn btn-secondary btn-icon" id="btn-add-value" title="ເພີ່ມຄຸນຄ່າຫຼັກ">
-                        ${SVG_ICONS.plus}
-                    </button>
+            <div class="card" style="display:flex; flex-direction:column; gap:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="font-size:16px;">ຄຸນຄ່າຫຼັກຂອງອົງກອນ (Core Values)</h3>
+                    ${!isReadOnly ? `
+                        <button class="btn btn-primary btn-icon" id="btn-add-value" style="width:32px; height:32px;" title="ເພີ່ມຄຸນຄ່າຫຼັກ">
+                            ${SVG_ICONS.plus}
+                        </button>
+                    ` : ''}
                 </div>
-                <div style="display:flex; flex-direction:column; gap:16px; overflow-y:auto; flex:1;" id="about-values-list">
+
+                <div class="values-list" style="display:flex; flex-direction:column; gap:12px;">
                     ${store.db.about.values.map(val => `
-                        <div class="card" style="padding:16px; background-color: rgba(255,255,255,0.01); border-color: var(--border-color); display:flex; justify-content:space-between; align-items:center;">
-                            <div>
-                                <h4 style="font-size:14px; font-weight:700; color:var(--primary); margin-bottom:4px;">${val.title}</h4>
-                                <p style="font-size:12px; color:var(--text-secondary); line-height:1.4">${val.desc}</p>
-                            </div>
-                            <div class="btn-group">
-                                <button class="btn btn-secondary btn-icon" style="width:30px; height:30px;" onclick="editCoreValue('${val.id}')" title="ແກ້ໄຂ">
-                                    ${SVG_ICONS.edit}
-                                </button>
-                                <button class="btn btn-danger btn-icon" style="width:30px; height:30px;" onclick="deleteCoreValue('${val.id}')" title="ລຶບ">
-                                    ${SVG_ICONS.delete}
-                                </button>
-                            </div>
+                        <div class="value-item-card" style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); position: relative; background: rgba(255,255,255,0.01);">
+                            ${!isReadOnly ? `
+                                <div style="position: absolute; top: 12px; right: 12px; display:flex; gap:6px;">
+                                    <button class="btn btn-secondary btn-icon" style="width:24px; height:24px; padding:0;" onclick="editCoreValue('${val.id}')" title="ແກ້ໄຂ">
+                                        ${SVG_ICONS.edit}
+                                    </button>
+                                    <button class="btn btn-danger btn-icon" style="width:24px; height:24px; padding:0;" onclick="deleteCoreValue('${val.id}')" title="ລຶບ">
+                                        ${SVG_ICONS.delete}
+                                    </button>
+                                </div>
+                            ` : ''}
+                            <div style="font-weight:700; color:var(--text-primary); font-size:14px; margin-bottom:4px; padding-right: 60px;">${val.title}</div>
+                            <p style="font-size:12px; color:var(--text-secondary); line-height: 1.4;">${val.desc}</p>
                         </div>
                     `).join('')}
                 </div>
@@ -881,27 +889,35 @@ router.register('#about', (container) => {
         </div>
     `;
 
-    document.getElementById('btn-add-value').addEventListener('click', () => {
-        editingEntityId = null;
-        document.getElementById('value-modal-title').textContent = "ເພີ່ມຄຸນຄ່າຫຼັກ";
-        document.getElementById('value-form').reset();
-        ModalManager.open('modal-value-form');
-    });
+    if (!isReadOnly) {
+        document.getElementById('btn-add-value').addEventListener('click', () => {
+            editingEntityId = null;
+            document.getElementById('value-modal-title').textContent = "ເພີ່ມຄຸນຄ່າຫຼັກ";
+            document.getElementById('value-form').reset();
+            ModalManager.open('modal-value-form');
+        });
+    }
 });
 
 window.submitAboutInfoForm = function(event) {
     event.preventDefault();
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'checker') {
+        toast.show("ຜູ້ກວດສອບບໍ່ມີສິດແກ້ໄຂຂໍ້ມູນຫຼັກ.", "danger");
+        return;
+    }
     store.db.about.hero = document.getElementById('about-hero').value.trim();
     store.db.about.description = document.getElementById('about-desc').value.trim();
     store.db.about.mission = document.getElementById('about-mission').value.trim();
     store.db.about.vision = document.getElementById('about-vision').value.trim();
-    
-    store.addLog('about', "ອັບເດດຄຳອະທິບາຍ ແລະ ການຕັ້ງຄ່າ ກ່ຽວກັບ ພວກເຮົາ ແລ້ວ");
+    store.addLog('about', "ອັບເດດພາລະກິດ & ວິໄສທັດຫຼັກຂອງອົງກອນແລ້ວ");
     store.save();
-    toast.show("ອັບເດດການຕັ້ງຄ່າໜ້າຂໍ້ມູນກ່ຽວກັບສຳເລັດແລ້ວ.");
+    toast.show("ບັນທຶກຂໍ້ມູນຫຼັກສຳເລັດແລ້ວ.");
 };
 
 window.editCoreValue = function(id) {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'checker') return;
     const val = store.db.about.values.find(v => v.id === id);
     if (!val) return;
 
@@ -914,6 +930,8 @@ window.editCoreValue = function(id) {
 };
 
 window.deleteCoreValue = function(id) {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'checker') return;
     if (confirm("ທ່ານແນ່ໃຈບໍວ່າຕ້ອງການລຶບຄຸນຄ່າຫຼັກນີ້?")) {
         const index = store.db.about.values.findIndex(v => v.id === id);
         if (index > -1) {
@@ -929,6 +947,11 @@ window.deleteCoreValue = function(id) {
 
 window.submitValueForm = function(event) {
     event.preventDefault();
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'checker') {
+        toast.show("ຜູ້ກວດສອບບໍ່ມີສິດຈັດການຄຸນຄ່າຫຼັກ.", "danger");
+        return;
+    }
     const title = document.getElementById('value-form-title').value.trim();
     const desc = document.getElementById('value-form-desc').value.trim();
 
@@ -963,30 +986,37 @@ window.submitValueForm = function(event) {
 
 // --- 4. ORGANIZATION / TEAM VIEW (CRUD) ---
 router.register('#org', (container) => {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    const isReadOnly = role === 'checker';
+
     // Sort members by order
     const sortedTeam = [...store.db.org].sort((a, b) => a.order - b.order);
 
     container.innerHTML = `
         <div class="section-header">
             <div>
-                <p style="font-size:14px; color:var(--text-secondary)">ຈັດການໂຄງສ້າງອົງກອນ, ຄະນະບໍລິຫານ ແລະ ທີມງານຜူ້ນຳ.</p>
+                <p style="font-size:14px; color:var(--text-secondary)">ຈັດການໂຄງສ້າງອົງກອນ, ຄະນະບໍລິຫານ ແລະ ທີມງານຜູ້ນຳ.</p>
             </div>
-            <button class="btn btn-primary" id="btn-add-member">
-                ${SVG_ICONS.plus} ເພີ່ມຜູ້ນຳ / ສະມາຊິກ
-            </button>
+            ${!isReadOnly ? `
+                <button class="btn btn-primary" id="btn-add-member">
+                    ${SVG_ICONS.plus} ເພີ່ມຜູ້ນຳ / ສະມາຊິກ
+                </button>
+            ` : ''}
         </div>
 
         <div class="team-grid">
             ${sortedTeam.map(member => `
                 <div class="card team-card">
-                    <div class="team-card-actions">
-                        <button class="btn btn-secondary btn-icon" style="width:28px; height:28px;" onclick="editTeamMember('${member.id}')" title="ແກ້ໄຂ">
-                            ${SVG_ICONS.edit}
-                        </button>
-                        <button class="btn btn-danger btn-icon" style="width:28px; height:28px;" onclick="deleteTeamMember('${member.id}')" title="ລຶບ">
-                            ${SVG_ICONS.delete}
-                        </button>
-                    </div>
+                    ${!isReadOnly ? `
+                        <div class="team-card-actions">
+                            <button class="btn btn-secondary btn-icon" style="width:28px; height:28px;" onclick="editTeamMember('${member.id}')" title="ແກ້ໄຂ">
+                                ${SVG_ICONS.edit}
+                            </button>
+                            <button class="btn btn-danger btn-icon" style="width:28px; height:28px;" onclick="deleteTeamMember('${member.id}')" title="ລຶບ">
+                                ${SVG_ICONS.delete}
+                            </button>
+                        </div>
+                    ` : ''}
                     <div class="team-card-avatar">${member.avatar || member.name.substring(0, 2)}</div>
                     <div class="team-card-name">${member.name}</div>
                     <div class="team-card-role">${member.role}</div>
@@ -997,18 +1027,21 @@ router.register('#org', (container) => {
         </div>
     `;
 
-    document.getElementById('btn-add-member').addEventListener('click', () => {
-        editingEntityId = null;
-        document.getElementById('member-modal-title').textContent = "ເພີ່ມຄະນະບໍລິຫານ/ສະມາຊິກທີມ";
-        document.getElementById('member-form').reset();
-        // Set next order index
-        const nextOrder = store.db.org.length > 0 ? Math.max(...store.db.org.map(o => o.order)) + 1 : 1;
-        document.getElementById('member-form-order').value = nextOrder;
-        ModalManager.open('modal-member-form');
-    });
+    if (!isReadOnly) {
+        document.getElementById('btn-add-member').addEventListener('click', () => {
+            editingEntityId = null;
+            document.getElementById('member-modal-title').textContent = "ເພີ່ມຄະນະບໍລິຫານ/ສະມາຊິກທີມ";
+            document.getElementById('member-form').reset();
+            const nextOrder = store.db.org.length > 0 ? Math.max(...store.db.org.map(o => o.order)) + 1 : 1;
+            document.getElementById('member-form-order').value = nextOrder;
+            ModalManager.open('modal-member-form');
+        });
+    }
 });
 
 window.editTeamMember = function(id) {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'checker') return;
     const member = store.db.org.find(m => m.id === id);
     if (!member) return;
 
@@ -1024,6 +1057,8 @@ window.editTeamMember = function(id) {
 };
 
 window.deleteTeamMember = function(id) {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'checker') return;
     if (confirm("ທ່ານແນ່ໃຈບໍວ່າຕ້ອງການລຶບສະມາຊິກນີ້ອອກຈາກຖານຂໍ້ມູນອົງກອນ?")) {
         const index = store.db.org.findIndex(m => m.id === id);
         if (index > -1) {
@@ -1039,19 +1074,23 @@ window.deleteTeamMember = function(id) {
 
 window.submitMemberForm = function(event) {
     event.preventDefault();
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'checker') {
+        toast.show("ຜູ້ກວດສອບບໍ່ມີສິດຈັດການສະມາຊິກທີມ.", "danger");
+        return;
+    }
     const name = document.getElementById('member-form-name').value.trim();
-    const role = document.getElementById('member-form-role').value.trim();
+    const roleName = document.getElementById('member-form-role').value.trim();
     let avatar = document.getElementById('member-form-avatar').value.trim();
     const order = parseInt(document.getElementById('member-form-order').value) || 0;
     const bio = document.getElementById('member-form-bio').value.trim();
 
-    if (!name || !role) {
+    if (!name || !roleName) {
         toast.show("ກະລຸນາປ້ອນຊື່ ແລະ ຕຳແໜ່ງ.", "danger");
         return;
     }
 
     if (!avatar) {
-        // Generate initials
         avatar = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
     }
 
@@ -1059,7 +1098,7 @@ window.submitMemberForm = function(event) {
         const m = store.db.org.find(member => member.id === editingEntityId);
         if (m) {
             m.name = name;
-            m.role = role;
+            m.role = roleName;
             m.avatar = avatar;
             m.order = order;
             m.bio = bio;
@@ -1070,7 +1109,7 @@ window.submitMemberForm = function(event) {
         const newMember = {
             id: `member-${Date.now()}`,
             name,
-            role,
+            role: roleName,
             avatar,
             order,
             bio
@@ -1087,14 +1126,19 @@ window.submitMemberForm = function(event) {
 
 // --- 5. SECTOR VIEW (CRUD) ---
 router.register('#sectors', (container) => {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    const isReadOnly = role === 'checker';
+
     container.innerHTML = `
         <div class="section-header">
             <div>
                 <p style="font-size:14px; color:var(--text-secondary)">ຈັດການຂະແໜງການທີ່ເຄື່ອນໄຫວ ແລະ ການຕັ້ງຄ່າການດຳເນີນງານຂອງພວກເຂົາ.</p>
             </div>
-            <button class="btn btn-primary" id="btn-add-sector">
-                ${SVG_ICONS.plus} ເພີ່ມຂະແໜງການໃໝ່
-            </button>
+            ${!isReadOnly ? `
+                <button class="btn btn-primary" id="btn-add-sector">
+                    ${SVG_ICONS.plus} ເພີ່ມຂະແໜງການໃໝ່
+                </button>
+            ` : ''}
         </div>
 
         <div class="sectors-grid">
@@ -1104,14 +1148,16 @@ router.register('#sectors', (container) => {
                         <div class="sector-icon-box" style="color: ${sec.themeColor || 'var(--primary)'}">
                             ${SVG_ICONS[sec.icon] || SVG_ICONS.leaf}
                         </div>
-                        <div class="sector-card-actions">
-                            <button class="btn btn-secondary btn-icon" style="width:28px; height:28px;" onclick="editSector('${sec.id}')" title="ແກ້ໄຂ">
-                                ${SVG_ICONS.edit}
-                            </button>
-                            <button class="btn btn-danger btn-icon" style="width:28px; height:28px;" onclick="deleteSector('${sec.id}')" title="ລຶບ">
-                                ${SVG_ICONS.delete}
-                            </button>
-                        </div>
+                        ${!isReadOnly ? `
+                            <div class="sector-card-actions">
+                                <button class="btn btn-secondary btn-icon" style="width:28px; height:28px;" onclick="editSector('${sec.id}')" title="ແກ້ໄຂ">
+                                    ${SVG_ICONS.edit}
+                                </button>
+                                <button class="btn btn-danger btn-icon" style="width:28px; height:28px;" onclick="deleteSector('${sec.id}')" title="ລຶບ">
+                                    ${SVG_ICONS.delete}
+                                </button>
+                            </div>
+                        ` : ''}
                     </div>
                     <div class="sector-title">${sec.name}</div>
                     <p class="sector-desc">${sec.desc}</p>
@@ -1126,15 +1172,19 @@ router.register('#sectors', (container) => {
         </div>
     `;
 
-    document.getElementById('btn-add-sector').addEventListener('click', () => {
-        editingEntityId = null;
-        document.getElementById('sector-modal-title').textContent = "ເພີ່ມຂະແໜງການ";
-        document.getElementById('sector-form').reset();
-        ModalManager.open('modal-sector-form');
-    });
+    if (!isReadOnly) {
+        document.getElementById('btn-add-sector').addEventListener('click', () => {
+            editingEntityId = null;
+            document.getElementById('sector-modal-title').textContent = "ເພີ່ມຂະແໜງການ";
+            document.getElementById('sector-form').reset();
+            ModalManager.open('modal-sector-form');
+        });
+    }
 });
 
 window.editSector = function(id) {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'checker') return;
     const sec = store.db.sectors.find(s => s.id === id);
     if (!sec) return;
 
@@ -1150,6 +1200,8 @@ window.editSector = function(id) {
 };
 
 window.deleteSector = function(id) {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'checker') return;
     if (confirm("ທ່ານແນ່ໃຈບໍວ່າຕ້ອງການລຶບຂະແໜງການນີ້? ຂໍ້ມູນທັງໝົດທີ່ກ່ຽວຂ້ອງຈະຖືກແຍກອອກ.")) {
         const index = store.db.sectors.findIndex(s => s.id === id);
         if (index > -1) {
@@ -1165,6 +1217,11 @@ window.deleteSector = function(id) {
 
 window.submitSectorForm = function(event) {
     event.preventDefault();
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'checker') {
+        toast.show("ຜູ້ກວດສອບບໍ່ມີສິດຈັດການຂະແໜງການ.", "danger");
+        return;
+    }
     const name = document.getElementById('sector-form-name').value.trim();
     const icon = document.getElementById('sector-form-icon').value;
     const themeColor = document.getElementById('sector-form-color').value;
@@ -1208,14 +1265,19 @@ window.submitSectorForm = function(event) {
 
 // --- 6. ACTIVITIES VIEW (CRUD) ---
 router.register('#activities', (container) => {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    const isReadOnly = role === 'checker';
+
     container.innerHTML = `
         <div class="section-header">
             <div>
                 <p style="font-size:14px; color:var(--text-secondary)">ຈັດການກຳນົດເວລາແຜນງານ, ກອງປະຊຸມຝຶກອົບຮົມ, ສຳມະນາ ແລະ ກິດຈະກຳພາຍນອກ.</p>
             </div>
-            <button class="btn btn-primary" id="btn-add-activity">
-                ${SVG_ICONS.plus} ລົງທະບຽນກິດຈະກຳ
-            </button>
+            ${!isReadOnly ? `
+                <button class="btn btn-primary" id="btn-add-activity">
+                    ${SVG_ICONS.plus} ລົງທະບຽນກິດຈະກຳ
+                </button>
+            ` : ''}
         </div>
 
         <div class="card" style="padding:0; overflow:hidden;">
@@ -1256,13 +1318,20 @@ router.register('#activities', (container) => {
                                     </span>
                                 </td>
                                 <td style="text-align:right">
-                                    <div class="btn-group" style="justify-content: flex-end;">
-                                        <button class="btn btn-secondary btn-icon" onclick="editActivity('${act.id}')" title="ແກ້ໄຂ">
-                                            ${SVG_ICONS.edit}
-                                        </button>
-                                        <button class="btn btn-danger btn-icon" onclick="deleteActivity('${act.id}')" title="ລຶບ">
-                                            ${SVG_ICONS.delete}
-                                        </button>
+                                    <div class="btn-group" style="justify-content: flex-end; align-items: center; gap: 8px;">
+                                        ${(role === 'checker' || role === 'admin' || role === 'super_admin') && act.status === 'pending' ? `
+                                            <button class="btn btn-primary" onclick="approveActivity('${act.id}')" title="ອະນຸມັດ" style="padding: 6px 12px; font-size: 12px; height: 32px;">
+                                                ອະນຸມັດ
+                                            </button>
+                                        ` : ''}
+                                        ${role !== 'checker' ? `
+                                            <button class="btn btn-secondary btn-icon" onclick="editActivity('${act.id}')" title="ແກ້ໄຂ">
+                                                ${SVG_ICONS.edit}
+                                            </button>
+                                            <button class="btn btn-danger btn-icon" onclick="deleteActivity('${act.id}')" title="ລຶບ">
+                                                ${SVG_ICONS.delete}
+                                            </button>
+                                        ` : ''}
                                     </div>
                                 </td>
                             </tr>
@@ -1273,17 +1342,38 @@ router.register('#activities', (container) => {
         </div>
     `;
 
-    document.getElementById('btn-add-activity').addEventListener('click', () => {
-        editingEntityId = null;
-        document.getElementById('activity-modal-title').textContent = "ລົງທະບຽນກິດຈະກຳ / ງານ";
-        document.getElementById('activity-form').reset();
-        document.getElementById('activity-form-date').value = new Date().toISOString().substring(0, 10);
-        document.getElementById('activity-form-time').value = "09:00";
-        ModalManager.open('modal-activity-form');
-    });
+    if (!isReadOnly) {
+        document.getElementById('btn-add-activity').addEventListener('click', () => {
+            editingEntityId = null;
+            document.getElementById('activity-modal-title').textContent = "ລົງທະບຽນກິດຈະກຳ / ງານ";
+            document.getElementById('activity-form').reset();
+            
+            // Populate form status drop-down dynamically based on user role
+            const statusSelect = document.getElementById('activity-form-status');
+            if (statusSelect) {
+                if (role === 'maker') {
+                    statusSelect.innerHTML = `
+                        <option value="pending">ລໍຖ້າອະນຸມັດ</option>
+                    `;
+                } else {
+                    statusSelect.innerHTML = `
+                        <option value="active">ເປີດໃຊ້ງານ / ມີກຳນົດການ</option>
+                        <option value="pending">ລໍຖ້າອະນຸມັດ</option>
+                        <option value="archived">ເກັບຖາວອນ / ຜ່ານມາແລ້ວ</option>
+                    `;
+                }
+            }
+
+            document.getElementById('activity-form-date').value = new Date().toISOString().substring(0, 10);
+            document.getElementById('activity-form-time').value = "09:00";
+            ModalManager.open('modal-activity-form');
+        });
+    }
 });
 
 window.editActivity = function(id) {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'checker') return;
     const act = store.db.activities.find(a => a.id === id);
     if (!act) return;
 
@@ -1294,13 +1384,32 @@ window.editActivity = function(id) {
     document.getElementById('activity-form-time').value = act.time;
     document.getElementById('activity-form-location').value = act.location;
     document.getElementById('activity-form-organizer').value = act.organizer;
-    document.getElementById('activity-form-status').value = act.status;
+    
+    // Populate form status drop-down dynamically
+    const statusSelect = document.getElementById('activity-form-status');
+    if (statusSelect) {
+        if (role === 'maker') {
+            statusSelect.innerHTML = `
+                <option value="pending">ລໍຖ້າອະນຸມັດ</option>
+            `;
+        } else {
+            statusSelect.innerHTML = `
+                <option value="active">ເປີດໃຊ້ງານ / ມີກຳນົດການ</option>
+                <option value="pending">ລໍຖ້າອະນຸມັດ</option>
+                <option value="archived">ເກັບຖາວອນ / ຜ່ານມາແລ້ວ</option>
+            `;
+        }
+        statusSelect.value = act.status;
+    }
+
     document.getElementById('activity-form-desc').value = act.desc;
 
     ModalManager.open('modal-activity-form');
 };
 
 window.deleteActivity = function(id) {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'checker') return;
     if (confirm("ທ່ານແນ່ໃຈບໍວ່າຕ້ອງການລຶບລາຍການກິດຈະກຳນີ້?")) {
         const index = store.db.activities.findIndex(a => a.id === id);
         if (index > -1) {
@@ -1314,8 +1423,24 @@ window.deleteActivity = function(id) {
     }
 };
 
+window.approveActivity = function(id) {
+    const item = store.db.activities.find(a => a.id === id);
+    if (!item) return;
+    
+    item.status = 'active';
+    store.addLog('activities', `ອະນຸມັດກິດຈະກຳ '${item.title}' ແລ້ວ`);
+    store.save();
+    toast.show("ອະນຸມັດກິດຈະກຳສຳເລັດແລ້ວ.");
+    router.handleHashChange();
+};
+
 window.submitActivityForm = function(event) {
     event.preventDefault();
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'checker') {
+        toast.show("ຜູ້ກວດສອບບໍ່ມີສິດຈັດການກິດຈະກຳ.", "danger");
+        return;
+    }
     const title = document.getElementById('activity-form-title').value.trim();
     const date = document.getElementById('activity-form-date').value;
     const time = document.getElementById('activity-form-time').value;
@@ -1367,7 +1492,6 @@ window.submitActivityForm = function(event) {
 let activeInboxMessageId = null;
 
 router.register('#contacts', (container) => {
-    // Select first message automatically if none is selected
     if (!activeInboxMessageId && store.db.contacts.length > 0) {
         activeInboxMessageId = store.db.contacts[0].id;
     }
@@ -1375,6 +1499,7 @@ router.register('#contacts', (container) => {
 });
 
 function renderContactView(container) {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
     const activeMsg = store.db.contacts.find(c => c.id === activeInboxMessageId);
 
     container.innerHTML = `
@@ -1418,13 +1543,17 @@ function renderContactView(container) {
                     
                     <div class="message-body">${activeMsg.message}</div>
                     
-                    <div class="btn-group" style="justify-content: flex-end;">
-                        <button class="btn btn-secondary" onclick="simulateReplyMessage('${activeMsg.id}')">
-                            ${SVG_ICONS.reply} ຕອບກັບ
-                        </button>
-                        <button class="btn btn-danger" onclick="deleteInboxMessage('${activeMsg.id}')">
-                            ${SVG_ICONS.delete} ລຶບ
-                        </button>
+                    <div class="btn-group" style="justify-content: flex-end; gap:8px;">
+                        ${role !== 'maker' ? `
+                            <button class="btn btn-secondary" onclick="simulateReplyMessage('${activeMsg.id}')">
+                                ${SVG_ICONS.reply} ຕອບກັບ
+                            </button>
+                        ` : ''}
+                        ${role === 'admin' || role === 'super_admin' ? `
+                            <button class="btn btn-danger" onclick="deleteInboxMessage('${activeMsg.id}')">
+                                ${SVG_ICONS.delete} ລຶບ
+                            </button>
+                        ` : ''}
                     </div>
                 ` : `
                     <div style="flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column; color:var(--text-muted); gap:12px;">
@@ -1450,6 +1579,11 @@ window.selectInboxMessage = function(id) {
 };
 
 window.deleteInboxMessage = function(id) {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role !== 'admin' && role !== 'super_admin') {
+        toast.show("ທ່ານບໍ່ມີສິດລຶບຂໍ້ຄວາມຕິດຕໍ່.", "danger");
+        return;
+    }
     if (confirm("ທ່ານແນ່ໃຈບໍວ່າຕ້ອງການລຶບຂໍ້ຄວາມນີ້ຢ່າງຖາວອນ?")) {
         const index = store.db.contacts.findIndex(c => c.id === id);
         if (index > -1) {
@@ -1465,10 +1599,14 @@ window.deleteInboxMessage = function(id) {
 };
 
 window.simulateReplyMessage = function(id) {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    if (role === 'maker') {
+        toast.show("ຜູ້ສ້າງບໍ່ມີສິດຕອບກັບຂໍ້ຄວາມ.", "danger");
+        return;
+    }
     const msg = store.db.contacts.find(c => c.id === id);
     if (!msg) return;
 
-    // Simulate sending reply by prompting user for message body
     const replyBody = prompt(`ສົ່ງອີເມວຕອບກັບຫາ ${msg.name} (${msg.email}):\n\nຫົວຂໍ້: Re: ${msg.subject}\n\nພິມຂໍ້ຄວາມຕອບກັບຂອງທ່ານໃສ່ລຸ່ມນີ້:`);
     if (replyBody && replyBody.trim() !== '') {
         msg.status = 'replied';
@@ -1478,7 +1616,6 @@ window.simulateReplyMessage = function(id) {
         router.handleHashChange();
     }
 };
-
 
 // ==========================================
 // THEME SWITCHER & CORE INITIALIZATION
