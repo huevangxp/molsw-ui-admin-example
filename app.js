@@ -829,42 +829,78 @@ router.register('#about', (container) => {
     const isReadOnly = role === 'checker';
 
     container.innerHTML = `
-        <div class="grid-2x" style="margin-bottom: 24px;">
-            <div class="card" style="display:flex; flex-direction:column; gap:16px;">
-                <h3 style="font-size:16px;">ພາລະກິດ, ວິໄສທັດຫຼັກ ແລະ ຂໍ້ມູນຍ່ອຍ</h3>
-                <form id="about-info-form" onsubmit="submitAboutInfoForm(event)">
-                    <div class="form-group">
-                        <label class="form-label">ຫົວຂໍ້ຫຼັກ / ສ່ວນເທິງສຸດ</label>
-                        <input type="text" class="form-control" id="about-hero" value="${store.db.about.hero}" ${isReadOnly ? 'disabled style="opacity: 0.7; cursor: not-allowed;"' : ''} required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">ຄຳອະທິບາຍທົ່ວໄປ</label>
-                        <textarea class="form-control" id="about-desc" ${isReadOnly ? 'disabled style="opacity: 0.7; cursor: not-allowed;"' : ''} required>${store.db.about.description}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">ພາລະກິດ (Mission)</label>
-                        <textarea class="form-control" id="about-mission" ${isReadOnly ? 'disabled style="opacity: 0.7; cursor: not-allowed;"' : ''} required>${store.db.about.mission}</textarea>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label class="form-label">ວິໄສທັດ (Vision)</label>
-                        <textarea class="form-control" id="about-vision" ${isReadOnly ? 'disabled style="opacity: 0.7; cursor: not-allowed;"' : ''} required>${store.db.about.vision}</textarea>
-                    </div>
-                    ${!isReadOnly ? `
-                        <button type="submit" class="btn btn-primary" style="margin-top: 16px; width: fit-content;">
-                            ບັນທຶກຂໍ້ມູນຫຼັກ
-                        </button>
-                    ` : ''}
-                </form>
+        <div style="display:flex; flex-direction:column; gap:24px; margin-bottom: 24px;">
+            <div class="card" style="display:flex; flex-direction:column; gap:16px; padding:0; overflow:hidden;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding: 20px 20px 8px 20px;">
+                    <h3 style="font-size:16px; margin:0;">ພາລະກິດ, ວິໄສທັດຫຼັກ ແລະ ຂໍ້ມູນຍ່ອຍ</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ປະເພດຂໍ້ມູນ</th>
+                                <th>ເນື້ອໃນ</th>
+                                ${!isReadOnly ? \`<th style="text-align:right">ການຈັດການ</th>\` : ''}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight:700; color:var(--text-primary); font-size:14px; min-width:160px;">ຫົວຂໍ້ຫຼັກ / ສ່ວນເທິງສຸດ</td>
+                                <td style="font-size:13px; color:var(--text-secondary); line-height: 1.5;">${store.db.about.hero}</td>
+                                ${!isReadOnly ? \`
+                                <td style="text-align:right; width:90px;">
+                                    <button class="btn btn-secondary btn-icon" style="width:28px; height:28px; padding:0;" onclick="editAboutInfo('hero')" title="ແກ້ໄຂ">
+                                        ${SVG_ICONS.edit}
+                                    </button>
+                                </td>
+                                \` : ''}
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; color:var(--text-primary); font-size:14px;">ຄຳອະທິບາຍທົ່ວໄປ</td>
+                                <td style="font-size:13px; color:var(--text-secondary); line-height: 1.5;">${store.db.about.description}</td>
+                                ${!isReadOnly ? \`
+                                <td style="text-align:right; width:90px;">
+                                    <button class="btn btn-secondary btn-icon" style="width:28px; height:28px; padding:0;" onclick="editAboutInfo('description')" title="ແກ້ໄຂ">
+                                        ${SVG_ICONS.edit}
+                                    </button>
+                                </td>
+                                \` : ''}
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; color:var(--text-primary); font-size:14px;">ພາລະກິດ (Mission)</td>
+                                <td style="font-size:13px; color:var(--text-secondary); line-height: 1.5;">${store.db.about.mission}</td>
+                                ${!isReadOnly ? \`
+                                <td style="text-align:right; width:90px;">
+                                    <button class="btn btn-secondary btn-icon" style="width:28px; height:28px; padding:0;" onclick="editAboutInfo('mission')" title="ແກ້ໄຂ">
+                                        ${SVG_ICONS.edit}
+                                    </button>
+                                </td>
+                                \` : ''}
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; color:var(--text-primary); font-size:14px;">ວິໄສທັດ (Vision)</td>
+                                <td style="font-size:13px; color:var(--text-secondary); line-height: 1.5;">${store.db.about.vision}</td>
+                                ${!isReadOnly ? \`
+                                <td style="text-align:right; width:90px;">
+                                    <button class="btn btn-secondary btn-icon" style="width:28px; height:28px; padding:0;" onclick="editAboutInfo('vision')" title="ແກ້ໄຂ">
+                                        ${SVG_ICONS.edit}
+                                    </button>
+                                </td>
+                                \` : ''}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="card" style="display:flex; flex-direction:column; gap:16px; padding:0; overflow:hidden;">
                 <div style="display:flex; justify-content:space-between; align-items:center; padding: 20px 20px 8px 20px;">
                     <h3 style="font-size:16px; margin:0;">ຄຸນຄ່າຫຼັກຂອງອົງກອນ (Core Values)</h3>
-                    ${!isReadOnly ? `
+                    ${!isReadOnly ? \`
                         <button class="btn btn-primary btn-icon" id="btn-add-value" style="width:32px; height:32px;" title="ເພີ່ມຄຸນຄ່າຫຼັກ">
                             ${SVG_ICONS.plus}
                         </button>
-                    ` : ''}
+                    \` : ''}
                 </div>
 
                 <div class="table-responsive">
@@ -873,44 +909,44 @@ router.register('#about', (container) => {
                             <tr>
                                 <th>ຫົວຂໍ້ຄຸນຄ່າ</th>
                                 <th>ຄຳອະທິບາຍຄຸນຄ່າ</th>
-                                ${!isReadOnly ? `<th style="text-align:right">ການຈັດການ</th>` : ''}
+                                ${!isReadOnly ? \`<th style="text-align:right">ການຈັດການ</th>\` : ''}
                             </tr>
                         </thead>
                         <tbody>
-                            ${store.db.about.values.length === 0 ? `
+                            ${store.db.about.values.length === 0 ? \`
                                 <tr>
                                     <td colspan="${!isReadOnly ? 3 : 2}" style="text-align:center; padding:40px; color:var(--text-muted);">
                                         ຍັງບໍ່ມີຂໍ້ມູນຄຸນຄ່າຫຼັກເທື່ອ.
                                     </td>
                                 </tr>
-                            ` : store.db.about.values.map(val => `
+                            \` : store.db.about.values.map(val => \`
                                 <tr>
-                                    <td style="font-weight:700; color:var(--text-primary); font-size:14px; min-width:120px;">
+                                    <td style="font-weight:700; color:var(--text-primary); font-size:14px; min-width:160px;">
                                         ${val.title}
                                     </td>
-                                    <td style="font-size:12px; color:var(--text-secondary); line-height: 1.4;">
+                                    <td style="font-size:13px; color:var(--text-secondary); line-height: 1.5;">
                                         ${val.desc}
                                     </td>
-                                    ${!isReadOnly ? `
+                                    ${!isReadOnly ? \`
                                         <td style="text-align:right; width:90px;">
                                             <div class="btn-group" style="justify-content: flex-end; gap:6px;">
-                                                <button class="btn btn-secondary btn-icon" style="width:28px; height:28px; padding:0;" onclick="editCoreValue('${val.id}')" title="ແກ້ໄຂ">
+                                                <button class="btn btn-secondary btn-icon" style="width:28px; height:28px; padding:0;" onclick="editCoreValue('\${val.id}')" title="ແກ້ໄຂ">
                                                     ${SVG_ICONS.edit}
                                                 </button>
-                                                <button class="btn btn-danger btn-icon" style="width:28px; height:28px; padding:0;" onclick="deleteCoreValue('${val.id}')" title="ລຶບ">
+                                                <button class="btn btn-danger btn-icon" style="width:28px; height:28px; padding:0;" onclick="deleteCoreValue('\${val.id}')" title="ລຶບ">
                                                     ${SVG_ICONS.delete}
                                                 </button>
                                             </div>
                                         </td>
-                                    ` : ''}
+                                    \` : ''}
                                 </tr>
-                            `).join('')}
+                            \`).join('')}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    `;
+    \`;
 
     if (!isReadOnly) {
         const addBtn = container.querySelector('#btn-add-value');
