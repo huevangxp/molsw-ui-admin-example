@@ -115,9 +115,112 @@
                 </div>
             </header>
             
-            <!-- Page Router Workspace -->
+                        <!-- Page Router Workspace -->
             <main class="content-body" id="app-view">
-                <!-- Rendered dynamically by app.js -->
+                <div class="view-pane">
+                    <div class="grid-4x">
+                        <div class="card stat-card" style="--card-color: var(--primary); --card-color-glow: var(--primary-glow); --card-accent: var(--primary-gradient)">
+                            <div>
+                                <span class="stat-label">ບົດຄວາມທັງໝົດ</span>
+                                <div class="stat-value" id="stat-news-count">0</div>
+                            </div>
+                            <div class="stat-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+                            </div>
+                        </div>
+                        
+                        <div class="card stat-card" style="--card-color: var(--accent-cyan); --card-color-glow: rgba(6, 182, 212, 0.4); --card-accent: var(--accent-cyan-gradient)">
+                            <div>
+                                <span class="stat-label">ຂະແໜງການທີ່ເຄື່ອນໄຫວ</span>
+                                <div class="stat-value" id="stat-sectors-count">0</div>
+                            </div>
+                            <div class="stat-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                            </div>
+                        </div>
+                        
+                        <div class="card stat-card" style="--card-color: var(--success); --card-color-glow: rgba(16, 185, 129, 0.4); --card-accent: var(--success)">
+                            <div>
+                                <span class="stat-label">ແຜນງານທີ່ຈະມາເຖິງ</span>
+                                <div class="stat-value" id="stat-activities-count">0</div>
+                            </div>
+                            <div class="stat-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            </div>
+                        </div>
+                        
+                        <div class="card stat-card" style="--card-color: var(--danger); --card-color-glow: rgba(239, 68, 68, 0.4); --card-accent: var(--danger)">
+                            <div>
+                                <span class="stat-label">ຂໍ້ຄວາມທີ່ຍັງບໍ່ທັນອ່ານ</span>
+                                <div class="stat-value" id="stat-contacts-count">0</div>
+                            </div>
+                            <div class="stat-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-layout">
+                        <div class="card">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                                <h3 style="font-size:16px;">ການເຄື່ອນໄຫວ ແລະ ການວິເຄາະເວທີ</h3>
+                                <div style="display:flex; gap:8px;">
+                                    <span style="display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--primary); font-weight:600">
+                                        <span style="width:8px; height:8px; border-radius:50%; background-color:var(--primary)"></span> ການອັບເດດເນື້ອໃນ
+                                    </span>
+                                    <span style="display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--accent-cyan); font-weight:600">
+                                        <span style="width:8px; height:8px; border-radius:50%; background-color:var(--accent-cyan)"></span> ຄຳຖາມຈາກຜູ້ຢ້ຽມຊົມ
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- SVG Vector Chart for WOW factor -->
+                            <div class="chart-container">
+                                <svg class="svg-chart" viewBox="0 0 500 220">
+                                    <defs>
+                                        <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="#6366F1" />
+                                            <stop offset="100%" stop-color="#06B6D4" />
+                                        </linearGradient>
+                                        <linearGradient id="chart-area-gradient" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stop-color="#6366F1" stop-opacity="0.3" />
+                                            <stop offset="100%" stop-color="#06B6D4" stop-opacity="0.0" />
+                                        </linearGradient>
+                                    </defs>
+                                    <!-- Grid Lines -->
+                                    <line x1="10" y1="20" x2="490" y2="20" class="chart-grid-line" />
+                                    <line x1="10" y1="70" x2="490" y2="70" class="chart-grid-line" />
+                                    <line x1="10" y1="120" x2="490" y2="120" class="chart-grid-line" />
+                                    <line x1="10" y1="170" x2="490" y2="170" class="chart-grid-line" />
+                                    
+                                    <!-- Smooth line chart path -->
+                                    <path d="M 10 180 Q 90 140 170 110 T 330 60 T 490 30" class="chart-line-path" />
+                                    <path d="M 10 180 Q 90 140 170 110 T 330 60 T 490 30 L 490 200 L 10 200 Z" class="chart-area-path" />
+                                    
+                                    <!-- Chart Points -->
+                                    <circle cx="10" cy="180" class="chart-point" />
+                                    <circle cx="90" cy="140" class="chart-point" />
+                                    <circle cx="170" cy="110" class="chart-point" />
+                                    <circle cx="250" cy="85" class="chart-point" />
+                                    <circle cx="330" cy="60" class="chart-point" />
+                                    <circle cx="410" cy="45" class="chart-point" />
+                                    <circle cx="490" cy="30" class="chart-point" />
+                                </svg>
+                            </div>
+                            
+                            <div style="display:flex; justify-content:space-between; margin-top:12px; font-size:11px; color:var(--text-muted); font-weight:600; padding:0 10px;">
+                                <span>ມັງກອນ</span><span>ກຸມພາ</span><span>ມີນາ</span><span>ເມສາ</span><span>ພຶດສະພາ</span><span>ມິຖຸນາ</span><span>ກໍລະກົດ</span>
+                            </div>
+                        </div>
+
+                        <div class="card" style="display:flex; flex-direction:column;">
+                            <h3 style="font-size:16px; margin-bottom: 20px;">ການກວດສອບການເຄື່ອນໄຫວລະບົບ</h3>
+                            <ul class="activity-list" id="dashboard-logs">
+                                <!-- Logs populated below -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
     </div>

@@ -336,13 +336,44 @@ function renderCurrentPage() {
 
         const mainContainer = document.getElementById('app-view');
         if (mainContainer) {
-            mainContainer.innerHTML = '';
-            
-            // Build temporary wrapper to fade-in
-            const viewPane = document.createElement('div');
-            viewPane.className = 'view-pane';
-            render(viewPane);
-            mainContainer.appendChild(viewPane);
+            // Performance/Smoothness tweak: if we are loading the index dashboard and the static markup is already present
+            if (page === 'dashboard' && mainContainer.querySelector('.chart-container')) {
+                // Update dynamic values directly
+                const newsVal = document.getElementById('stat-news-count');
+                if (newsVal) newsVal.textContent = store.db.news.length;
+                const sectorsVal = document.getElementById('stat-sectors-count');
+                if (sectorsVal) sectorsVal.textContent = store.db.sectors.length;
+                const activitiesVal = document.getElementById('stat-activities-count');
+                if (activitiesVal) activitiesVal.textContent = store.db.activities.length;
+                const contactsVal = document.getElementById('stat-contacts-count');
+                if (contactsVal) contactsVal.textContent = store.db.contacts.filter(c => c.status === 'unread').length;
+
+                // Populate logs list
+                const logsContainer = document.getElementById('dashboard-logs');
+                if (logsContainer) {
+                    if (store.db.logs.length === 0) {
+                        logsContainer.innerHTML = `<li style="font-size:13px; color:var(--text-muted); text-align:center; padding: 20px 0;">ບໍ່ມີບັນທຶກການເຄື່ອນໄຫວ.</li>`;
+                    } else {
+                        logsContainer.innerHTML = store.db.logs.map(log => `
+                            <li class="activity-item ${log.type}">
+                                <span class="activity-icon-bullet"></span>
+                                <div class="activity-meta">
+                                    <span style="font-weight:500">${log.text}</span>
+                                    <span class="activity-time">${log.time}</span>
+                                </div>
+                            </li>
+                        `).join('');
+                    }
+                }
+            } else {
+                mainContainer.innerHTML = '';
+                
+                // Build temporary wrapper to fade-in
+                const viewPane = document.createElement('div');
+                viewPane.className = 'view-pane';
+                render(viewPane);
+                mainContainer.appendChild(viewPane);
+            }
         }
 
         // Close mobile menu sidebar if open
