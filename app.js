@@ -857,9 +857,9 @@ router.register('#about', (container) => {
                 </form>
             </div>
 
-            <div class="card" style="display:flex; flex-direction:column; gap:16px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h3 style="font-size:16px;">ຄຸນຄ່າຫຼັກຂອງອົງກອນ (Core Values)</h3>
+            <div class="card" style="display:flex; flex-direction:column; gap:16px; padding:0; overflow:hidden;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding: 20px 20px 8px 20px;">
+                    <h3 style="font-size:16px; margin:0;">ຄຸນຄ່າຫຼັກຂອງອົງກອນ (Core Values)</h3>
                     ${!isReadOnly ? `
                         <button class="btn btn-primary btn-icon" id="btn-add-value" style="width:32px; height:32px;" title="ເພີ່ມຄຸນຄ່າຫຼັກ">
                             ${SVG_ICONS.plus}
@@ -867,23 +867,46 @@ router.register('#about', (container) => {
                     ` : ''}
                 </div>
 
-                <div class="values-list" style="display:flex; flex-direction:column; gap:12px;">
-                    ${store.db.about.values.map(val => `
-                        <div class="value-item-card" style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); position: relative; background: rgba(255,255,255,0.01);">
-                            ${!isReadOnly ? `
-                                <div style="position: absolute; top: 12px; right: 12px; display:flex; gap:6px;">
-                                    <button class="btn btn-secondary btn-icon" style="width:24px; height:24px; padding:0;" onclick="editCoreValue('${val.id}')" title="ແກ້ໄຂ">
-                                        ${SVG_ICONS.edit}
-                                    </button>
-                                    <button class="btn btn-danger btn-icon" style="width:24px; height:24px; padding:0;" onclick="deleteCoreValue('${val.id}')" title="ລຶບ">
-                                        ${SVG_ICONS.delete}
-                                    </button>
-                                </div>
-                            ` : ''}
-                            <div style="font-weight:700; color:var(--text-primary); font-size:14px; margin-bottom:4px; padding-right: 60px;">${val.title}</div>
-                            <p style="font-size:12px; color:var(--text-secondary); line-height: 1.4;">${val.desc}</p>
-                        </div>
-                    `).join('')}
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ຫົວຂໍ້ຄຸນຄ່າ</th>
+                                <th>ຄຳອະທິບາຍຄຸນຄ່າ</th>
+                                ${!isReadOnly ? `<th style="text-align:right">ການຈັດການ</th>` : ''}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${store.db.about.values.length === 0 ? `
+                                <tr>
+                                    <td colspan="${!isReadOnly ? 3 : 2}" style="text-align:center; padding:40px; color:var(--text-muted);">
+                                        ຍັງບໍ່ມີຂໍ້ມູນຄຸນຄ່າຫຼັກເທື່ອ.
+                                    </td>
+                                </tr>
+                            ` : store.db.about.values.map(val => `
+                                <tr>
+                                    <td style="font-weight:700; color:var(--text-primary); font-size:14px; min-width:120px;">
+                                        ${val.title}
+                                    </td>
+                                    <td style="font-size:12px; color:var(--text-secondary); line-height: 1.4;">
+                                        ${val.desc}
+                                    </td>
+                                    ${!isReadOnly ? `
+                                        <td style="text-align:right; width:90px;">
+                                            <div class="btn-group" style="justify-content: flex-end; gap:6px;">
+                                                <button class="btn btn-secondary btn-icon" style="width:28px; height:28px; padding:0;" onclick="editCoreValue('${val.id}')" title="ແກ້ໄຂ">
+                                                    ${SVG_ICONS.edit}
+                                                </button>
+                                                <button class="btn btn-danger btn-icon" style="width:28px; height:28px; padding:0;" onclick="deleteCoreValue('${val.id}')" title="ລຶບ">
+                                                    ${SVG_ICONS.delete}
+                                                </button>
+                                            </div>
+                                        </td>
+                                    ` : ''}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
