@@ -286,6 +286,57 @@ class ModalManager {
 // Page Route Controller & View Registry
 const routes = {};
 
+
+function initializeUserRole() {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+    
+    // Update profile badge UI elements
+    const avatarEl = document.getElementById('header-user-avatar');
+    const nameEl = document.getElementById('header-user-name');
+    const roleEl = document.getElementById('header-user-role');
+    
+    const roleDetails = {
+        super_admin: { initials: 'SA', name: 'ຜູ້ດູແລລະບົບ', title: 'ຜູ້ບໍລິຫານສູງສຸດ' },
+        admin: { initials: 'AD', name: 'ຜູ້ດູແລລະບົບ', title: 'ຜູ້ດູແລລະບົບ' },
+        maker: { initials: 'MK', name: 'ຜູ້ສ້າງເນື້ອຫາ', title: 'ຜູ້ສ້າງ (Maker)' },
+        checker: { initials: 'CK', name: 'ຜູ້ກວດສອບ', title: 'ຜູ້ກວດສອບ (Checker)' }
+    };
+    
+    const details = roleDetails[role] || roleDetails.super_admin;
+    if (avatarEl) avatarEl.textContent = details.initials;
+    if (nameEl) nameEl.textContent = details.name;
+    if (roleEl) roleEl.textContent = details.title;
+    
+    // Bind dropdown toggle
+    const dropdownBtn = document.getElementById('profile-dropdown-btn');
+    const dropdownWrapper = document.querySelector('.profile-badge-wrapper');
+    const dropdownMenu = document.getElementById('profile-dropdown-menu');
+    
+    if (dropdownBtn && dropdownWrapper) {
+        // Clone and replace to clean listeners
+        const newBtn = dropdownBtn.cloneNode(true);
+        dropdownBtn.parentNode.replaceChild(newBtn, dropdownBtn);
+        
+        newBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownWrapper.classList.toggle('active');
+            if (dropdownMenu) dropdownMenu.classList.toggle('active');
+        });
+        
+        document.addEventListener('click', () => {
+            dropdownWrapper.classList.remove('active');
+            if (dropdownMenu) dropdownMenu.classList.remove('active');
+        });
+    }
+}
+
+window.switchUserRole = function(role) {
+    localStorage.setItem('CURRENT_USER_ROLE', role);
+    initializeUserRole();
+    toast.show(`ປ່ຽນບົດບາດເປັນ ${role} ສຳເລັດແລ້ວ.`);
+    router.handleHashChange(); // re-render view with new permissions
+};
+
 function getCurrentPage() {
     const path = window.location.pathname;
     const filename = path.substring(path.lastIndexOf('/') + 1);
@@ -524,6 +575,8 @@ router.register('#news', (container) => {
 });
 
 function renderNewsView(container) {
+    const role = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+
     // Filter news items
     const filteredNews = store.db.news.filter(item => 
         item.title.toLowerCase().includes(newsSearchQuery.toLowerCase()) || 
@@ -537,9 +590,11 @@ function renderNewsView(container) {
                 ${SVG_ICONS.search}
                 <input type="text" class="form-control" id="news-search-bar" placeholder="ຄົ້ນຫາຂ່າວສານດ້ວຍຫົວຂໍ້ ຫຼື ແທັກ..." value="${newsSearchQuery}">
             </div>
-            <button class="btn btn-primary" id="btn-create-news">
-                ${SVG_ICONS.plus} ຂຽນຂ່າວສານ
-            </button>
+            ${role !== 'checker' ? `
+                <button class="btn btn-primary" id="btn-create-news">
+                    ${SVG_ICONS.plus} ຂຽນຂ່າວສານ
+                </button>
+            ` : ''}
         </div>
 
         <div class="card" style="padding:0; overflow:hidden;">
@@ -582,17 +637,24 @@ function renderNewsView(container) {
                                 <td><span style="font-family:monospace; font-size:13px">${item.date}</span></td>
                                 <td>
                                     <span class="badge badge-${item.status}">
-                                        ${item.status === 'published' ? 'ເຜີຍແຜ່ແລ້ວ' : 'ສະບັບຮ່າງ'}
+                                        ${item.status === 'published' ? 'ເຜີຍແຜ່ແລ້ວ' : item.status === 'pending' ? 'ລໍຖ້າອະນຸມັດ' : 'ສະບັບຮ່າງ'}
                                     </span>
                                 </td>
                                 <td style="text-align:right">
-                                    <div class="btn-group" style="justify-content: flex-end;">
-                                        <button class="btn btn-secondary btn-icon" onclick="editNews('${item.id}')" title="ແກ້ໄຂ">
-                                            ${SVG_ICONS.edit}
-                                        </button>
-                                        <button class="btn btn-danger btn-icon" onclick="deleteNews('${item.id}')" title="ລຶບ">
-                                            ${SVG_ICONS.delete}
-                                        </button>
+                                    <div class="btn-group" style="justify-content: flex-end; align-items: center; gap: 8px;">
+                                        ${(role === 'checker' || role === 'admin' || role === 'super_admin') && item.status === 'pending' ? `
+                                            <button class="btn btn-primary" onclick="approveNews('${item.id}')" title="ອະນຸມັດ" style="padding: 6px 12px; font-size: 12px; height: 32px;">
+                                                ອະນຸມັດ
+                                            </button>
+                                        ` : ''}
+                                        ${role !== 'checker' ? `
+                                            <button class="btn btn-secondary btn-icon" onclick="editNews('${item.id}')" title="ແກ້ໄຂ">
+                                                ${SVG_ICONS.edit}
+                                            </button>
+                                            <button class="btn btn-danger btn-icon" onclick="deleteNews('${item.id}')" title="ລຶບ">
+                                                ${SVG_ICONS.delete}
+                                            </button>
+                                        ` : ''}
                                     </div>
                                 </td>
                             </tr>
@@ -605,24 +667,49 @@ function renderNewsView(container) {
 
     // Event listener for search
     const searchBar = document.getElementById('news-search-bar');
-    searchBar.addEventListener('input', (e) => {
-        newsSearchQuery = e.target.value;
-        renderNewsView(container);
-        // Put cursor back to end of search bar
-        const sb = document.getElementById('news-search-bar');
-        sb.focus();
-        sb.setSelectionRange(sb.value.length, sb.value.length);
-    });
+    if (searchBar) {
+        searchBar.addEventListener('input', (e) => {
+            newsSearchQuery = e.target.value;
+            renderNewsView(container);
+            const sb = document.getElementById('news-search-bar');
+            if (sb) {
+                sb.focus();
+                sb.setSelectionRange(sb.value.length, sb.value.length);
+            }
+        });
+    }
 
     // Event listener for create button
-    document.getElementById('btn-create-news').addEventListener('click', () => {
-        editingEntityId = null;
-        document.getElementById('news-modal-title').textContent = "ຂຽນບົດຄວາມຂ່າວສານ";
-        document.getElementById('news-form').reset();
-        document.getElementById('news-form-date').value = new Date().toISOString().substring(0, 10);
-        ModalManager.open('modal-news-form');
-    });
+    const createBtn = document.getElementById('btn-create-news');
+    if (createBtn) {
+        createBtn.addEventListener('click', () => {
+            editingEntityId = null;
+            document.getElementById('news-modal-title').textContent = "ຂຽນບົດຄວາມຂ່າວສານ";
+            document.getElementById('news-form').reset();
+            
+            // Populate form status drop-down dynamically based on user role
+            const statusSelect = document.getElementById('news-form-status');
+            if (statusSelect) {
+                if (role === 'maker') {
+                    statusSelect.innerHTML = `
+                        <option value="draft">ສະບັບຮ່າງ</option>
+                        <option value="pending">ລໍຖ້າການອະນຸມັດ</option>
+                    `;
+                } else {
+                    statusSelect.innerHTML = `
+                        <option value="draft">ສະບັບຮ່າງ</option>
+                        <option value="pending">ລໍຖ້າການອະນຸມັດ</option>
+                        <option value="published">ເຜີຍແຜ່ແລ້ວ</option>
+                    `;
+                }
+            }
+            
+            document.getElementById('news-form-date').value = new Date().toISOString().substring(0, 10);
+            ModalManager.open('modal-news-form');
+        });
+    }
 }
+
 
 // Global scope binding for news CRUD
 window.editNews = function(id) {
@@ -1370,6 +1457,9 @@ window.simulateReplyMessage = function(id) {
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize User Role
+    initializeUserRole();
+
     // Theme setup
     const storedTheme = localStorage.getItem('THEME_PREFERENCE') || 'light';
     document.documentElement.setAttribute('data-theme', storedTheme);
