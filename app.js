@@ -666,12 +666,12 @@ function renderNewsView(container) {
     `;
 
     // Event listener for search
-    const searchBar = document.getElementById('news-search-bar');
+    const searchBar = container.querySelector('#news-search-bar');
     if (searchBar) {
         searchBar.addEventListener('input', (e) => {
             newsSearchQuery = e.target.value;
             renderNewsView(container);
-            const sb = document.getElementById('news-search-bar');
+            const sb = container.querySelector('#news-search-bar');
             if (sb) {
                 sb.focus();
                 sb.setSelectionRange(sb.value.length, sb.value.length);
@@ -680,7 +680,7 @@ function renderNewsView(container) {
     }
 
     // Event listener for create button
-    const createBtn = document.getElementById('btn-create-news');
+    const createBtn = container.querySelector('#btn-create-news');
     if (createBtn) {
         createBtn.addEventListener('click', () => {
             editingEntityId = null;
@@ -890,12 +890,15 @@ router.register('#about', (container) => {
     `;
 
     if (!isReadOnly) {
-        document.getElementById('btn-add-value').addEventListener('click', () => {
-            editingEntityId = null;
-            document.getElementById('value-modal-title').textContent = "ເພີ່ມຄຸນຄ່າຫຼັກ";
-            document.getElementById('value-form').reset();
-            ModalManager.open('modal-value-form');
-        });
+        const addBtn = container.querySelector('#btn-add-value');
+        if (addBtn) {
+            addBtn.addEventListener('click', () => {
+                editingEntityId = null;
+                document.getElementById('value-modal-title').textContent = "ເພີ່ມຄຸນຄ່າຫຼັກ";
+                document.getElementById('value-form').reset();
+                ModalManager.open('modal-value-form');
+            });
+        }
     }
 });
 
@@ -1028,14 +1031,17 @@ router.register('#org', (container) => {
     `;
 
     if (!isReadOnly) {
-        document.getElementById('btn-add-member').addEventListener('click', () => {
-            editingEntityId = null;
-            document.getElementById('member-modal-title').textContent = "ເພີ່ມຄະນະບໍລິຫານ/ສະມາຊິກທີມ";
-            document.getElementById('member-form').reset();
-            const nextOrder = store.db.org.length > 0 ? Math.max(...store.db.org.map(o => o.order)) + 1 : 1;
-            document.getElementById('member-form-order').value = nextOrder;
-            ModalManager.open('modal-member-form');
-        });
+        const addMemberBtn = container.querySelector('#btn-add-member');
+        if (addMemberBtn) {
+            addMemberBtn.addEventListener('click', () => {
+                editingEntityId = null;
+                document.getElementById('member-modal-title').textContent = "ເພີ່ມຄະນະບໍລິຫານ/ສະມາຊິກທີມ";
+                document.getElementById('member-form').reset();
+                const nextOrder = store.db.org.length > 0 ? Math.max(...store.db.org.map(o => o.order)) + 1 : 1;
+                document.getElementById('member-form-order').value = nextOrder;
+                ModalManager.open('modal-member-form');
+            });
+        }
     }
 });
 
@@ -1173,12 +1179,15 @@ router.register('#sectors', (container) => {
     `;
 
     if (!isReadOnly) {
-        document.getElementById('btn-add-sector').addEventListener('click', () => {
-            editingEntityId = null;
-            document.getElementById('sector-modal-title').textContent = "ເພີ່ມຂະແໜງການ";
-            document.getElementById('sector-form').reset();
-            ModalManager.open('modal-sector-form');
-        });
+        const addSectorBtn = container.querySelector('#btn-add-sector');
+        if (addSectorBtn) {
+            addSectorBtn.addEventListener('click', () => {
+                editingEntityId = null;
+                document.getElementById('sector-modal-title').textContent = "ເພີ່ມຂະແໜງການ";
+                document.getElementById('sector-form').reset();
+                ModalManager.open('modal-sector-form');
+            });
+        }
     }
 });
 
@@ -1343,31 +1352,34 @@ router.register('#activities', (container) => {
     `;
 
     if (!isReadOnly) {
-        document.getElementById('btn-add-activity').addEventListener('click', () => {
-            editingEntityId = null;
-            document.getElementById('activity-modal-title').textContent = "ລົງທະບຽນກິດຈະກຳ / ງານ";
-            document.getElementById('activity-form').reset();
-            
-            // Populate form status drop-down dynamically based on user role
-            const statusSelect = document.getElementById('activity-form-status');
-            if (statusSelect) {
-                if (role === 'maker') {
-                    statusSelect.innerHTML = `
-                        <option value="pending">ລໍຖ້າອະນຸມັດ</option>
-                    `;
-                } else {
-                    statusSelect.innerHTML = `
-                        <option value="active">ເປີດໃຊ້ງານ / ມີກຳນົດການ</option>
-                        <option value="pending">ລໍຖ້າອະນຸມັດ</option>
-                        <option value="archived">ເກັບຖາວອນ / ຜ່ານມາແລ້ວ</option>
-                    `;
+        const addActivityBtn = container.querySelector('#btn-add-activity');
+        if (addActivityBtn) {
+            addActivityBtn.addEventListener('click', () => {
+                editingEntityId = null;
+                document.getElementById('activity-modal-title').textContent = "ລົງທະບຽນກິດຈະກຳ / ງານ";
+                document.getElementById('activity-form').reset();
+                
+                // Populate form status drop-down dynamically based on user role
+                const statusSelect = document.getElementById('activity-form-status');
+                if (statusSelect) {
+                    if (role === 'maker') {
+                        statusSelect.innerHTML = `
+                            <option value="pending">ລໍຖ້າອະນຸມັດ</option>
+                        `;
+                    } else {
+                        statusSelect.innerHTML = `
+                            <option value="active">ເປີດໃຊ້ງານ / ມີກຳນົດການ</option>
+                            <option value="pending">ລໍຖ້າອະນຸມັດ</option>
+                            <option value="archived">ເກັບຖາວອນ / ຜ່ານມາແລ້ວ</option>
+                        `;
+                    }
                 }
-            }
 
-            document.getElementById('activity-form-date').value = new Date().toISOString().substring(0, 10);
-            document.getElementById('activity-form-time').value = "09:00";
-            ModalManager.open('modal-activity-form');
-        });
+                document.getElementById('activity-form-date').value = new Date().toISOString().substring(0, 10);
+                document.getElementById('activity-form-time').value = "09:00";
+                ModalManager.open('modal-activity-form');
+            });
+        }
     }
 });
 
