@@ -720,10 +720,29 @@ window.editNews = function(id) {
     document.getElementById('news-modal-title').textContent = "ແກ້ໄຂບົດຄວາມຂ່າວສານ";
     document.getElementById('news-form-title').value = item.title;
     document.getElementById('news-form-category').value = item.category;
-    document.getElementById('news-form-author').value = item.author;
+    document.getElementById('news-form-author').value = item.author || '';
     document.getElementById('news-form-date').value = item.date;
+    
+    // Populate form status drop-down dynamically
+    const statusSelect = document.getElementById('news-form-status');
+    if (statusSelect) {
+        const userRole = localStorage.getItem('CURRENT_USER_ROLE') || 'super_admin';
+        if (userRole === 'maker') {
+            statusSelect.innerHTML = `
+                <option value="draft">ສະບັບຮ່າງ</option>
+                <option value="pending">ລໍຖ້າການອະນຸມັດ</option>
+            `;
+        } else {
+            statusSelect.innerHTML = `
+                <option value="draft">ສະບັບຮ່າງ</option>
+                <option value="pending">ລໍຖ້າການອະນຸມັດ</option>
+                <option value="published">ເຜີຍແຜ່ແລ້ວ</option>
+            `;
+        }
+        statusSelect.value = item.status;
+    }
+    
     document.getElementById('news-form-image').value = item.image || '';
-    document.getElementById('news-form-status').value = item.status;
     document.getElementById('news-form-content').value = item.content;
 
     ModalManager.open('modal-news-form');
@@ -733,9 +752,9 @@ window.deleteNews = function(id) {
     if (confirm("ທ່ານແນ່ໃຈບໍວ່າຕ້ອງການລຶບບົດຄວາມຂ່າວສານນີ້ຢ່າງຖາວອນ?")) {
         const index = store.db.news.findIndex(n => n.id === id);
         if (index > -1) {
-            const article = store.db.news[index];
+            const item = store.db.news[index];
             store.db.news.splice(index, 1);
-            store.addLog('news', `ລຶບບົດຄວາມຂ່າວສານ '${article.title.substring(0, 20)}...' ແລ້ວ`);
+            store.addLog('news', `ລຶບບົດຄວາມຂ່າວສານ '${item.title}' ແລ້ວ`);
             store.save();
             toast.show("ລຶບບົດຄວາມຂ່າວສານສຳເລັດແລ້ວ.");
             router.handleHashChange();
@@ -743,57 +762,66 @@ window.deleteNews = function(id) {
     }
 };
 
-// Form submission for news
+window.approveNews = function(id) {
+    const item = store.db.news.find(n => n.id === id);
+    if (!item) return;
+    
+    item.status = 'published';
+    store.addLog('news', `ອະນຸມັດບົດຄວາມຂ່າວສານ '${item.title}' ແລ້ວ`);
+    store.save();
+    toast.show("ອະນຸມັດບົດຄວາມຂ່າວສານສຳເລັດແລ້ວ.");
+    router.handleHashChange();
+};
+
 window.submitNewsForm = function(event) {
     event.preventDefault();
     const title = document.getElementById('news-form-title').value.trim();
     const category = document.getElementById('news-form-category').value.trim();
     const author = document.getElementById('news-form-author').value.trim();
     const date = document.getElementById('news-form-date').value;
-    const image = document.getElementById('news-form-image').value.trim() || 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800';
     const status = document.getElementById('news-form-status').value;
+    const image = document.getElementById('news-form-image').value.trim();
     const content = document.getElementById('news-form-content').value.trim();
 
     if (!title || !category || !content) {
-        toast.show("ກະລຸນາຕຶ່ມຂໍ້ມູນໃສ່ທຸກຊ່ອງທີ່ກຳນົດໄວ້.", "danger");
+        toast.show("ກະລຸນາປ້ອນຂໍ້ມູນຫົວຂໍ້, ໝວດໝູ່ ແລະ ເນື້ອໃນ.", "danger");
         return;
     }
 
     if (editingEntityId) {
-        // Edit Mode
         const item = store.db.news.find(n => n.id === editingEntityId);
         if (item) {
             item.title = title;
             item.category = category;
-            item.author = author;
-            item.date = date;
-            item.image = image;
+            item.author = author || 'ທີມງານຜູ້ດູແລ';
+            item.date = date || new Date().toISOString().substring(0, 10);
             item.status = status;
+            item.image = image;
             item.content = content;
-            store.addLog('news', `ອັບເດດບົດຄວາມຂ່າວສານ '${title.substring(0, 20)}...' ແລ້ວ`);
+            store.addLog('news', `ອັບເດດບົດຄວາມຂ່າວສານ '${title}' ແລ້ວ`);
             toast.show("ອັບເດດບົດຄວາມຂ່າວສານສຳເລັດແລ້ວ.");
         }
     } else {
-        // Create Mode
-        const newArticle = {
+        const newNews = {
             id: `news-${Date.now()}`,
             title,
             category,
-            author: author || 'ຜູ້ດູແລລະບົບ',
-            date,
-            image,
+            author: author || 'ທີມງານຜູ້ດູແລ',
+            date: date || new Date().toISOString().substring(0, 10),
             status,
+            image,
             content
         };
-        store.db.news.unshift(newArticle);
-        store.addLog('news', `ສ້າງບົດຄວາມຂ່າວສານ '${title.substring(0, 20)}...' ແລ້ວ`);
-        toast.show("ສ້າງບົດຄວາມຂ່າວສານສຳເລັດແລ້ວ.");
+        store.db.news.push(newNews);
+        store.addLog('news', `ສ້າງບົດຄວາມຂ່າວສານ '${title}' ແລ້ວ`);
+        toast.show("ສ້າງບົດຄວາມຂ່າວສານໃໝ່ສຳເລັດແລ້ວ.");
     }
 
     store.save();
     ModalManager.close('modal-news-form');
     router.handleHashChange();
 };
+
 
 // --- 3. ABOUT US VIEW (CRUD values) ---
 router.register('#about', (container) => {
