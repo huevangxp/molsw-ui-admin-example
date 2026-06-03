@@ -1030,26 +1030,53 @@ router.register('#org', (container) => {
             ` : ''}
         </div>
 
-        <div class="team-grid">
-            ${sortedTeam.map(member => `
-                <div class="card team-card">
-                    ${!isReadOnly ? `
-                        <div class="team-card-actions">
-                            <button class="btn btn-secondary btn-icon" style="width:28px; height:28px;" onclick="editTeamMember('${member.id}')" title="ແກ້ໄຂ">
-                                ${SVG_ICONS.edit}
-                            </button>
-                            <button class="btn btn-danger btn-icon" style="width:28px; height:28px;" onclick="deleteTeamMember('${member.id}')" title="ລຶບ">
-                                ${SVG_ICONS.delete}
-                            </button>
-                        </div>
-                    ` : ''}
-                    <div class="team-card-avatar">${member.avatar || member.name.substring(0, 2)}</div>
-                    <div class="team-card-name">${member.name}</div>
-                    <div class="team-card-role">${member.role}</div>
-                    <div class="team-card-bio">${member.bio}</div>
-                    <div style="font-size:10px; color:var(--text-muted); margin-top:12px; font-weight:600">ລຳດັບການສະແດງ: ${member.order}</div>
-                </div>
-            `).join('')}
+        <div class="card" style="padding:0; overflow:hidden;">
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ຮູບ/ຊື່</th>
+                            <th>ຕຳແໜ່ງ</th>
+                            <th>ລາຍລະອຽດ (Bio)</th>
+                            <th>ລຳດັບ</th>
+                            <th style="text-align:right">ການຈັດການ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${sortedTeam.length === 0 ? `
+                            <tr>
+                                <td colspan="5" style="text-align:center; padding:40px; color:var(--text-muted);">
+                                    ຍັງບໍ່ມີຂໍ້ມູນ.
+                                </td>
+                            </tr>
+                        ` : sortedTeam.map(member => `
+                            <tr>
+                                <td>
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <div class="team-card-avatar" style="width:40px; height:40px; font-size:16px;">${member.avatar || member.name.substring(0, 2)}</div>
+                                        <div style="font-weight:700; color:var(--text-primary);">${member.name}</div>
+                                    </div>
+                                </td>
+                                <td><span style="font-size:13px; font-weight:500">${member.role}</span></td>
+                                <td><span style="font-size:12px; color:var(--text-secondary); line-height:1.4">${member.bio}</span></td>
+                                <td><span style="font-size:13px;">${member.order}</span></td>
+                                <td style="text-align:right">
+                                    <div class="btn-group" style="justify-content: flex-end; align-items: center; gap: 8px;">
+                                        ${!isReadOnly ? `
+                                            <button class="btn btn-secondary btn-icon" onclick="editTeamMember('${member.id}')" title="ແກ້ໄຂ">
+                                                ${SVG_ICONS.edit}
+                                            </button>
+                                            <button class="btn btn-danger btn-icon" onclick="deleteTeamMember('${member.id}')" title="ລຶບ">
+                                                ${SVG_ICONS.delete}
+                                            </button>
+                                        ` : '-'}
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
         </div>
     `;
 
@@ -1170,34 +1197,59 @@ router.register('#sectors', (container) => {
             ` : ''}
         </div>
 
-        <div class="sectors-grid">
-            ${store.db.sectors.map(sec => `
-                <div class="card sector-card" style="--card-color: ${sec.themeColor || 'var(--primary)'}">
-                    <div class="sector-card-header">
-                        <div class="sector-icon-box" style="color: ${sec.themeColor || 'var(--primary)'}">
-                            ${SVG_ICONS[sec.icon] || SVG_ICONS.leaf}
-                        </div>
-                        ${!isReadOnly ? `
-                            <div class="sector-card-actions">
-                                <button class="btn btn-secondary btn-icon" style="width:28px; height:28px;" onclick="editSector('${sec.id}')" title="ແກ້ໄຂ">
-                                    ${SVG_ICONS.edit}
-                                </button>
-                                <button class="btn btn-danger btn-icon" style="width:28px; height:28px;" onclick="deleteSector('${sec.id}')" title="ລຶບ">
-                                    ${SVG_ICONS.delete}
-                                </button>
-                            </div>
-                        ` : ''}
-                    </div>
-                    <div class="sector-title">${sec.name}</div>
-                    <p class="sector-desc">${sec.desc}</p>
-                    <div class="sector-card-footer">
-                        <span class="badge badge-${sec.status}">
-                            ${sec.status === 'active' ? 'ເປີດໃຊ້ງານ' : 'ປິດໃຊ້ງານ'}
-                        </span>
-                        <span style="font-size:11px; font-weight:700; color:var(--text-muted); font-family:monospace">${sec.themeColor}</span>
-                    </div>
-                </div>
-            `).join('')}
+        <div class="card" style="padding:0; overflow:hidden;">
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ຊື່ຂະແໜງການ</th>
+                            <th>ຄຳອະທິບາຍ</th>
+                            <th>ສີ/ໄອຄອນ</th>
+                            <th>ສະຖານະ</th>
+                            <th style="text-align:right">ການຈັດການ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${store.db.sectors.length === 0 ? `
+                            <tr>
+                                <td colspan="5" style="text-align:center; padding:40px; color:var(--text-muted);">
+                                    ຍັງບໍ່ມີຂໍ້ມູນ.
+                                </td>
+                            </tr>
+                        ` : store.db.sectors.map(sec => `
+                            <tr>
+                                <td><div style="font-weight:700; color:var(--text-primary);">${sec.name}</div></td>
+                                <td><span style="font-size:12px; color:var(--text-secondary); line-height:1.4">${sec.desc}</span></td>
+                                <td>
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <div class="sector-icon-box" style="color: ${sec.themeColor || 'var(--primary)'}; width:32px; height:32px; font-size:16px;">
+                                            ${SVG_ICONS[sec.icon] || SVG_ICONS.leaf}
+                                        </div>
+                                        <span style="font-size:11px; font-weight:700; color:var(--text-muted); font-family:monospace">${sec.themeColor}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-${sec.status}">
+                                        ${sec.status === 'active' ? 'ເປີດໃຊ້ງານ' : 'ປິດໃຊ້ງານ'}
+                                    </span>
+                                </td>
+                                <td style="text-align:right">
+                                    <div class="btn-group" style="justify-content: flex-end; align-items: center; gap: 8px;">
+                                        ${!isReadOnly ? `
+                                            <button class="btn btn-secondary btn-icon" onclick="editSector('${sec.id}')" title="ແກ້ໄຂ">
+                                                ${SVG_ICONS.edit}
+                                            </button>
+                                            <button class="btn btn-danger btn-icon" onclick="deleteSector('${sec.id}')" title="ລຶບ">
+                                                ${SVG_ICONS.delete}
+                                            </button>
+                                        ` : '-'}
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
         </div>
     `;
 
@@ -1538,66 +1590,76 @@ function renderContactView(container) {
     const activeMsg = store.db.contacts.find(c => c.id === activeInboxMessageId);
 
     container.innerHTML = `
-        <div class="contact-layout">
-            <div class="inbox-sidebar">
-                <div class="inbox-header">
-                    <h4 style="font-size:14px; font-weight:700; color:var(--text-primary)">ກ່ອງຈົດໝາຍເຂົ້າ</h4>
-                </div>
-                <ul class="inbox-list">
-                    ${store.db.contacts.length === 0 ? `
-                        <li style="text-align:center; padding: 30px; color:var(--text-muted); font-size:13px">
-                            ກ່ອງຈົດໝາຍເຂົ້າຂອງທ່ານວ່າງເປົ່າ.
-                        </li>
-                    ` : store.db.contacts.map(c => `
-                        <li class="inbox-item ${c.id === activeInboxMessageId ? 'active' : ''} ${c.status === 'unread' ? 'unread' : ''}" onclick="selectInboxMessage('${c.id}')">
-                            <div class="inbox-sender">${c.name}</div>
-                            <div class="inbox-subject">${c.subject}</div>
-                            <div class="inbox-date">${c.date}</div>
-                        </li>
-                    `).join('')}
-                </ul>
-            </div>
-            
-            <div class="card message-detail-pane">
-                ${activeMsg ? `
-                    <div class="message-detail-header">
-                        <div class="message-meta-row">
-                            <div class="message-sender-info">
-                                <span class="message-sender-name">${activeMsg.name}</span>
-                                <span class="message-sender-email">${activeMsg.email}</span>
-                            </div>
-                            <div style="text-align:right">
-                                <span class="badge badge-${activeMsg.status}" style="margin-bottom:8px">
-                                    ${activeMsg.status === 'unread' ? 'ຍັງບໍ່ອ່ານ' : activeMsg.status === 'replied' ? 'ຕອບກັບແລ້ວ' : 'ກຳລັງດຳເນີນການ'}
-                                </span>
-                                <div style="font-size:12px; color:var(--text-muted)">ໄດ້ຮັບວັນທີ: ${activeMsg.date}</div>
-                            </div>
-                        </div>
-                        <h2 style="font-size:18px; margin-top:16px; color:var(--text-primary)">${activeMsg.subject}</h2>
-                    </div>
-                    
-                    <div class="message-body">${activeMsg.message}</div>
-                    
-                    <div class="btn-group" style="justify-content: flex-end; gap:8px;">
-                        ${role !== 'maker' ? `
-                            <button class="btn btn-secondary" onclick="simulateReplyMessage('${activeMsg.id}')">
-                                ${SVG_ICONS.reply} ຕອບກັບ
-                            </button>
-                        ` : ''}
-                        ${role === 'admin' || role === 'super_admin' ? `
-                            <button class="btn btn-danger" onclick="deleteInboxMessage('${activeMsg.id}')">
-                                ${SVG_ICONS.delete} ລຶບ
-                            </button>
-                        ` : ''}
-                    </div>
-                ` : `
-                    <div style="flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column; color:var(--text-muted); gap:12px;">
-                        <svg style="width:64px; height:64px; opacity:0.3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                        <span>ເລືອກຂໍ້ຄວາມຈາກລາຍການເພື່ອເບິ່ງເນື້ອໃນ.</span>
-                    </div>
-                `}
+        <div class="card" style="padding:0; overflow:hidden;">
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ຜູ້ຕິດຕໍ່ (ອີເມວ)</th>
+                            <th>ຫົວຂໍ້</th>
+                            <th>ວັນທີ</th>
+                            <th>ສະຖານະ</th>
+                            <th style="text-align:right">ການຈັດການ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${store.db.contacts.length === 0 ? `
+                            <tr>
+                                <td colspan="5" style="text-align:center; padding:40px; color:var(--text-muted);">
+                                    ກ່ອງຈົດໝາຍເຂົ້າຂອງທ່ານວ່າງເປົ່າ.
+                                </td>
+                            </tr>
+                        ` : store.db.contacts.map(c => `
+                            <tr class="${c.id === activeInboxMessageId ? 'active-row' : ''}" style="${c.status === 'unread' ? 'font-weight:700; background-color:var(--bg-hover)' : ''}">
+                                <td>
+                                    <div style="color:var(--text-primary); font-weight:${c.status === 'unread' ? '700' : '500'};">${c.name}</div>
+                                    <div style="font-size:12px; color:var(--text-secondary);">${c.email}</div>
+                                </td>
+                                <td><span style="font-size:13px; color:var(--text-primary);">${c.subject}</span></td>
+                                <td><span style="font-size:13px; color:var(--text-secondary);">${c.date}</span></td>
+                                <td>
+                                    <span class="badge badge-${c.status}">
+                                        ${c.status === 'unread' ? 'ຍັງບໍ່ອ່ານ' : c.status === 'replied' ? 'ຕອບກັບແລ້ວ' : 'ກຳລັງດຳເນີນການ'}
+                                    </span>
+                                </td>
+                                <td style="text-align:right">
+                                    <div class="btn-group" style="justify-content: flex-end; align-items: center; gap: 8px;">
+                                        <button class="btn btn-primary" style="padding:4px 10px; font-size:12px; height:auto;" onclick="selectInboxMessage('${c.id}')">ເປີດອ່ານ</button>
+                                        ${role === 'admin' || role === 'super_admin' ? `
+                                            <button class="btn btn-danger btn-icon" onclick="deleteInboxMessage('${c.id}')" title="ລຶບ">
+                                                ${SVG_ICONS.delete}
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
             </div>
         </div>
+        
+        ${activeMsg ? `
+        <div class="card" style="margin-top:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
+                <div>
+                    <h2 style="font-size:18px; margin-bottom:8px; color:var(--text-primary)">${activeMsg.subject}</h2>
+                    <div style="font-size:13px; color:var(--text-secondary);">ຈາກ: <strong style="color:var(--text-primary);">${activeMsg.name}</strong> (${activeMsg.email})</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">${activeMsg.date}</div>
+                    ${role !== 'maker' ? `
+                        <button class="btn btn-secondary" style="padding:6px 12px; font-size:12px; height:auto;" onclick="simulateReplyMessage('${activeMsg.id}')">
+                            ${SVG_ICONS.reply} ຕອບກັບ
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+            <div style="padding:16px; background-color:var(--bg-card); border-radius:6px; font-size:14px; line-height:1.6; color:var(--text-primary); border:1px solid var(--border-color); box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);">
+                ${activeMsg.message.replace(/\\n/g, '<br>')}
+            </div>
+        </div>
+        ` : ''}
     `;
 }
 
